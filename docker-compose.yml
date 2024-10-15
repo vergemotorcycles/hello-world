@@ -1,0 +1,7 @@
+services:
+  qt6:
+    build:
+      context: .
+      x-bake:
+        platforms:
+          - linux/arm64

@@ -1,0 +1,14 @@
+
+<RCC>
+<qresource>
+<file>HELLO.qmlproject</file>
+<file>HELLO/Constants.qml</file>
+<file>HELLO/DirectoryFontLoader.qml</file>
+<file>HELLO/EventListModel.qml</file>
+<file>HELLO/EventListSimulator.qml</file>
+<file>HELLO/qmldir</file>
+<file>HELLOContent/App.qml</file>
+<file>HELLOContent/Screen01.ui.qml</file>
+<file>qtquickcontrols2.conf</file>
+</qresource>
+</RCC>
