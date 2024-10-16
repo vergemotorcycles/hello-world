@@ -1,0 +1,6 @@
+services:
+  weston:
+  hello:
+    image: TODO
+  world:
+    image: TODO

@@ -1,7 +1,11 @@
 services:
-  qt6:
+  hello:
     build:
       context: .
-      x-bake:
-        platforms:
-          - linux/arm64
+      args:
+          - SRC_DIR=app-hello
+  world:
+    build:
+      context: .
+      args:
+          - SRC_DIR=app-world
