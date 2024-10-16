@@ -1,0 +1,14 @@
+
+<RCC>
+<qresource>
+<file>WORLD.qmlproject</file>
+<file>WORLD/Constants.qml</file>
+<file>WORLD/DirectoryFontLoader.qml</file>
+<file>WORLD/EventListModel.qml</file>
+<file>WORLD/EventListSimulator.qml</file>
+<file>WORLD/qmldir</file>
+<file>WORLDContent/App.qml</file>
+<file>WORLDContent/Screen01.ui.qml</file>
+<file>qtquickcontrols2.conf</file>
+</qresource>
+</RCC>

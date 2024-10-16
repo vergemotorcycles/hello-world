@@ -1,7 +1,6 @@
 #!/bin/bash
-sleep 15
 echo "starting"
-/app/HELLOApp2 || true
+/usr/local/Qt-6.8.0/bin/HELLOApp || true
 
 echo "dead"
 sleep 99999

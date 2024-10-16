@@ -1,49 +1,43 @@
-FROM torizon/qt6-wayland:3.2
+FROM ghcr.io/vergemotorcycles/torizon-qt:latest
+
+ARG SRC_DIR
 
 RUN set -eux ; \
     apt-get update ; \
     apt-get upgrade -y ; \
     apt-get install -y --no-install-recommends \
-    build-essential \
-    ca-certificates \
-    cmake \
-    curl \
-    git \
-    python3 \
-    wget \
-    xz-utils \
-    libfontconfig1-dev \
-    libgl1-mesa-dev \
-    libglx-dev \
-    libwayland-dev \
-    qmake6 \
-    qml6-module-* \
-    qt6-base-dev \
-    qt6-base-dev-tools \
-    qt6-declarative-dev \
-    qt6-l10n-tools \
-    qt6-tools-dev \
-    qt6-websockets-dev \
-    qt6-shadertools-dev
+    libgles2-mesa-dev \
+    libxkbcommon-dev \
+    git
 
 WORKDIR /source
 
-COPY . .
+COPY ${SRC_DIR} .
 
 RUN set -eux ; \
-    cmake -DCMAKE_BUILD_TYPE=MinSizeRel -S /source -B /app
+    cmake  \
+    -DCMAKE_BUILD_TYPE=MinSizeRel \
+    -GNinja \
+    -S . \
+    -B /build
 
-WORKDIR /app
+WORKDIR /build
 
 RUN set -eux ; \
-    cmake --build . --parallel
+    cmake --build . --parallel ; \
+    cmake --install .
 
-RUN apt-get install -y --no-install-recommends \
-    imx-gpu-viv-wayland ; \
-    apt-get autoremove
+FROM torizon/qt6-wayland:3.2
 
-WORKDIR /
+ARG SRC_DIR
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY --from=0 /usr/local/Qt-6.8.0 /usr/local/Qt-6.8.0 
+
+RUN set -eux ; \
+    apt-get update ; \
+    apt-get install -y --no-install-recommends \
+    imx-gpu-viv-wayland
+
+COPY ${SRC_DIR}/entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
