@@ -1,6 +1,69 @@
 services:
   weston:
+    image: TODO
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      - ACCEPT_FSL_EULA=1
+      # - IGNORE_X_LOCKS=1
+    network_mode: host
+    volumes:
+      - /tmp:/tmp
+      - /dev:/dev
+      - /run/udev:/run/udev
+      - ./weston.ini:/etc/xdg/weston/weston.ini
+      - ./weston.ini:/etc/xdg/weston-dev/weston.ini
+    cap_add:
+      - CAP_SYS_TTY_CONFIG
+    # Add device access rights through cgroup...
+    device_cgroup_rules:
+      - 'c 4:0 rmw' # tty0
+      - 'c 4:7 rmw' # tty7
+      - 'c 13:* rmw' # /dev/input devices
+      - 'c 199:* rmw' # /dev/input devices
+      - 'c 226:* rmw' # /dev/dri devices
+    command: --developer weston-launch --tty=/dev/tty7 --user=torizon -- --shell=kiosk-shell.so
+    healthcheck:
+      test: ["CMD", "test", "-S", "/tmp/.X11-unix/X0"]
+      interval: 5s
+      timeout: 4s
+      retries: 6
+      start_period: 10s
+
   hello:
-    image: TODO
+    image: ghcr.io/vergemotorcycles/qt-hello:main
+    volumes:
+      - /tmp:/tmp:rw
+      - /dev/dri:/dev/dri:rw
+      - /dev/galcore:/dev/galcore
+    device_cgroup_rules:
+      - c 199:* rmw
+      - c 226:* rmw
+    environment:
+      - WAYLAND_USER=torizon
+      - XDG_RUNTIME_DIR=/tmp/1000-runtime-dir
+      - WAYLAND_DISPLAY=wayland-0
+      - DISPLAY=:0
+    depends_on:
+      weston:
+        condition: service_healthy
+        required: true
+
   world:
-    image: TODO
+    image: ghcr.io/vergemotorcycles/qt-world:main
+    volumes:
+      - /tmp:/tmp:rw
+      - /dev/dri:/dev/dri:rw
+      - /dev/galcore:/dev/galcore
+    device_cgroup_rules:
+      - c 199:* rmw
+      - c 226:* rmw
+    environment:
+      - WAYLAND_USER=torizon
+      - XDG_RUNTIME_DIR=/tmp/1000-runtime-dir
+      - WAYLAND_DISPLAY=wayland-0
+      - DISPLAY=:0
+    depends_on:
+      weston:
+        condition: service_healthy
+        required: true
