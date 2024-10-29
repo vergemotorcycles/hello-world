@@ -1,6 +1,6 @@
 services:
   weston:
-    image: TODO
+    image: torizon/weston-vivante:2.8
     pull_policy: always
     restart: unless-stopped
     environment:
